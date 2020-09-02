@@ -51,8 +51,22 @@ public class LicenseGenerator {
     }  
       
     public static void main(String[] args) throws Exception {
-        String serial = getSerial();
-        generator(serial);
+        System.out.println("请输入数字：1.自动；2.手动");
+        Scanner sc = new Scanner(System.in);
+        int choose = sc.nextInt();
+        switch (choose) {
+            case 1:
+                String serial = getSerial();
+                generator(serial);
+                break;
+            case 2:
+                System.out.println("请输入机器码");
+                String mechineCode = sc.next();
+                generator(mechineCode);
+                break;
+            default:
+                break;
+        }
     }
 
     public static String getSerial() throws Exception {
