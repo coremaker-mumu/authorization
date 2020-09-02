@@ -35,19 +35,23 @@ public class LicenseGenerator {
             "QQCu55QJDSpo1AsDs0mzNJ1qSEZAoevHxnmRelnDXJmGZtwb7wi7Te7QzsWwRLKzrAbzlyRmoLP5\n" +
             "gc4c3ne5EDZj";
       
-    public static void generator(String serial) throws Exception {
-        System.err.println("私钥加密——公钥解密");
-        System.out.println("原文字：\r\n" + serial);
-        byte[] data = serial.getBytes();
-        byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
-        System.out.println("加密后：\r\n" + new String(encodedData)); //加密后乱码是正常的  
-          
-        Base64Utils.byteArrayToFile(encodedData, FileUtil.getBasePath()+File.separator+"license.lic");
-        System.out.println("license.lic：\r\n" + FileUtil.getBasePath()+File.separator+"license.lic");
-        //解密  
-        byte[] decodedData = RSAUtils.decryptByPublicKey(encodedData, publicKey);  
-        String target = new String(decodedData);  
-        System.out.println("解密后: \r\n" + target);  
+    public static void generator(String serial) {
+        try {
+            System.err.println("私钥加密——公钥解密");
+            System.out.println("原文字：\r\n" + serial);
+            byte[] data = serial.getBytes();
+            byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
+            System.out.println("加密后：\r\n" + new String(encodedData)); //加密后乱码是正常的
+
+            Base64Utils.byteArrayToFile(encodedData, FileUtil.getBasePath()+File.separator+"license.lic");
+            System.out.println("license.lic：\r\n" + FileUtil.getBasePath()+File.separator+"license.lic");
+            //解密
+            byte[] decodedData = RSAUtils.decryptByPublicKey(encodedData, publicKey);
+            String target = new String(decodedData);
+            System.out.println("解密后: \r\n" + target);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }  
       
     public static void main(String[] args) throws Exception {
@@ -69,14 +73,19 @@ public class LicenseGenerator {
         }
     }
 
-    public static String getSerial() throws Exception {
-        Process process = Runtime.getRuntime().exec(
-                new String[] { "wmic", "cpu", "get", "ProcessorId" });
-        process.getOutputStream().close();
-        Scanner sc = new Scanner(process.getInputStream());
-        sc.next();
-        String mechineCode = sc.next();
-        System.out.println("机器码:" + mechineCode);
-        return mechineCode;
+    public static String getSerial() {
+        try {
+            Process process = Runtime.getRuntime().exec(
+                    new String[] { "wmic", "cpu", "get", "ProcessorId" });
+            process.getOutputStream().close();
+            Scanner sc = new Scanner(process.getInputStream());
+            sc.next();
+            String mechineCode = sc.next();
+            System.out.println("机器码:" + mechineCode);
+            return mechineCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }  
