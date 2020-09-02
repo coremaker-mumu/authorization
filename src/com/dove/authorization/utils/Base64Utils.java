@@ -1,4 +1,4 @@
-package com.dove.authorization;
+package com.dove.authorization.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;  
@@ -129,10 +129,7 @@ public class Base64Utils {
      */  
     public static void byteArrayToFile(byte[] bytes, String filePath) throws Exception {  
         InputStream in = new ByteArrayInputStream(bytes);     
-        File destFile = new File(filePath);  
-//        if (!destFile.getParentFile().exists()) {  
-//            destFile.getParentFile().mkdirs();  
-//        }  
+        File destFile = new File(filePath);
         destFile.createNewFile();  
         OutputStream out = new FileOutputStream(destFile);  
         byte[] cache = new byte[CACHE_SIZE];  

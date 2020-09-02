@@ -1,4 +1,4 @@
-package com.dove.authorization;
+package com.dove.authorization.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.security.Key;  
