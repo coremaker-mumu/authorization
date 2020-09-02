@@ -35,7 +35,7 @@ public class LicenseGenerator {
             "QQCu55QJDSpo1AsDs0mzNJ1qSEZAoevHxnmRelnDXJmGZtwb7wi7Te7QzsWwRLKzrAbzlyRmoLP5\n" +
             "gc4c3ne5EDZj";
       
-    public static void generator(String serial) {
+    public static void generator(String serial, String filePath) {
         try {
             System.err.println("私钥加密——公钥解密");
             System.out.println("原文字：\r\n" + serial);
@@ -43,8 +43,8 @@ public class LicenseGenerator {
             byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
             System.out.println("加密后：\r\n" + new String(encodedData)); //加密后乱码是正常的
 
-            Base64Utils.byteArrayToFile(encodedData, FileUtil.getBasePath()+File.separator+"license.lic");
-            System.out.println("license.lic：\r\n" + FileUtil.getBasePath()+File.separator+"license.lic");
+            Base64Utils.byteArrayToFile(encodedData, filePath+File.separator+"license.lic");
+            System.out.println("license.lic：\r\n" + filePath+File.separator+"license.lic");
             //解密
             byte[] decodedData = RSAUtils.decryptByPublicKey(encodedData, publicKey);
             String target = new String(decodedData);
@@ -58,15 +58,16 @@ public class LicenseGenerator {
         System.out.println("请输入数字：1.自动；2.手动");
         Scanner sc = new Scanner(System.in);
         int choose = sc.nextInt();
+        String filePath = FileUtil.getBasePath();
         switch (choose) {
             case 1:
                 String serial = getSerial();
-                generator(serial);
+                generator(serial, filePath);
                 break;
             case 2:
                 System.out.println("请输入机器码");
                 String mechineCode = sc.next();
-                generator(mechineCode);
+                generator(mechineCode, filePath);
                 break;
             default:
                 break;

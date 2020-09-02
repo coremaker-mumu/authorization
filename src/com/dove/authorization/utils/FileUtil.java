@@ -18,7 +18,7 @@ public class FileUtil {
     public static String getBasePath() {
         String filePath = FileUtil.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-        if (filePath.endsWith(".jar")) {
+        if (filePath.endsWith(".jar") || filePath.endsWith(".exe")) {
             filePath = filePath.substring(0, filePath.lastIndexOf("/"));
             try {
                 filePath = URLDecoder.decode(filePath, "UTF-8"); //解决路径中有空格%20的问题  
