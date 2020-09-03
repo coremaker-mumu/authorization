@@ -5,6 +5,8 @@ import com.dove.authorization.utils.FileUtil;
 import com.dove.authorization.utils.RSAUtils;
 
 import java.io.File;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 /** 
@@ -74,6 +76,10 @@ public class LicenseGenerator {
         }
     }
 
+    /**
+     * 获取CPU序列号
+     * @return
+     */
     public static String getSerial() {
         try {
             Process process = Runtime.getRuntime().exec(
@@ -88,5 +94,72 @@ public class LicenseGenerator {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 获取MAC地址，可能出现多个
+     * @return
+     */
+    public static String getMac() {
+        try {
+            Enumeration<NetworkInterface> el = NetworkInterface
+                    .getNetworkInterfaces();
+            while (el.hasMoreElements()) {
+                byte[] mac = el.nextElement().getHardwareAddress();
+                if (mac == null)
+                    continue;
+
+                String hexstr = bytesToHexString(mac);
+                if (hexstr.contains("0000")) {
+                    continue;
+                }
+                return getSplitString(hexstr, "-", 2).toUpperCase();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static String getSplitString(String str) {
+        return getSplitString(str, "-", 4);
+    }
+
+    private static String getSplitString(String str, String split, int length) {
+        int len = str.length();
+        StringBuilder temp = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            if (i % length == 0 && i > 0) {
+                temp.append(split);
+            }
+            temp.append(str.charAt(i));
+        }
+        String[] attrs = temp.toString().split(split);
+        StringBuilder finalMachineCode = new StringBuilder();
+        for (String attr : attrs) {
+            if (attr.length() == length) {
+                finalMachineCode.append(attr).append(split);
+            }
+        }
+        String result = finalMachineCode.toString().substring(0,
+                finalMachineCode.toString().length() - 1);
+        return result;
+    }
+
+    public static String bytesToHexString(byte[] src) {
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
     }
 }  
